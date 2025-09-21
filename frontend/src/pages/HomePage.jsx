@@ -15,6 +15,7 @@ import DonationModal from '../components/ui/DonationModal';
 import AnimatedHero from '../components/ui/AnimatedHero';
 import AnimatedPool from '../components/ui/AnimatedPool';
 import ParticleBackground from '../components/ui/ParticleBackground';
+import ImpactTracker from '../components/ui/ImpactTracker';
 import blockchainService from '../services/blockchainService';
 
 const HomePage = ({ user, onDonate, onConnectWallet }) => {
@@ -311,7 +312,26 @@ const HomePage = ({ user, onDonate, onConnectWallet }) => {
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Impact Tracker */}
+              <div className="lg:col-span-1">
+                <ImpactTracker
+                  user={user}
+                  donations={[
+                    { id: 1, amount: 25, date: '2024-01-15', method: 'FLR' },
+                    { id: 2, amount: 50, date: '2024-01-10', method: 'USDC' },
+                    { id: 3, amount: 15, date: '2024-01-05', method: 'XRPL' },
+                    { id: 4, amount: 100, date: '2024-01-01', method: 'FLR' },
+                  ]}
+                  emergencyRequests={[
+                    { id: 1, hospital: 'City General', amount: 500, funded: 500, status: 'completed' },
+                    { id: 2, hospital: 'Metro Health', amount: 300, funded: 300, status: 'completed' },
+                    { id: 3, hospital: 'Regional Medical', amount: 750, funded: 400, status: 'partial' },
+                    { id: 4, hospital: 'Emergency Care', amount: 200, funded: 200, status: 'completed' },
+                  ]}
+                />
+              </div>
+
               {/* Badge Gallery */}
               <div className="lg:col-span-2">
                 <h3 className="text-xl font-bold text-ink mb-4">Recent Badges</h3>
@@ -334,27 +354,6 @@ const HomePage = ({ user, onDonate, onConnectWallet }) => {
                     isEarned={true}
                     earnedOn={new Date()}
                   />
-                </div>
-              </div>
-
-              {/* Stats */}
-              <div className="lg:col-span-2 space-y-4">
-                <div className="slab-container">
-                  <h3 className="text-xl font-bold text-ink mb-4">Your Stats</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-muted">Total Donated</span>
-                      <span className="font-bold text-ink">$125</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted">Lives Helped</span>
-                      <span className="font-bold text-accent-2">8</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted">Badges Earned</span>
-                      <span className="font-bold text-accent-3">3</span>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

@@ -12,7 +12,14 @@ const CONTRACT_ADDRESSES = {
 const DONATION_POOL_ABI = [
   "function totalPool() external view returns (uint256)",
   "function nextRequestId() external view returns (uint256)",
-  "function getRequest(uint256 id) external view returns (tuple(string invoiceId, address creator, string hospitalXrpl, uint256 amountWei, bool funded, bool paidOut))",
+  "function totalDonations() external view returns (uint256)",
+  "function totalLivesHelped() external view returns (uint256)",
+  "function getRequest(uint256 id) external view returns (tuple(string invoiceId, address creator, string hospitalXrpl, uint256 amountWei, bool funded, bool paidOut, uint256 peopleHelped))",
+  "function getDonorImpact(address donor) external view returns (uint256 totalDonated, uint256 totalLivesHelped, uint256 donationCount)",
+  "function getDonorHistory(address donor) external view returns (tuple(address donor, uint256 amount, uint256 timestamp, uint256 livesHelped)[])",
+  "function getActiveRequests() external view returns (tuple(string invoiceId, address creator, string hospitalXrpl, uint256 amountWei, bool funded, bool paidOut, uint256 peopleHelped)[])",
+  "function calculateEqualDistribution(uint256 donationAmount) external view returns (uint256 perRequest, uint256 totalRequests)",
+  "function calculateLivesHelped(uint256 amountWei) external pure returns (uint256)",
   "function donate() external payable",
   "event DonationMade(address indexed donor, uint256 amountWei, uint256 time)",
   "event RequestCreated(uint256 indexed requestId, string invoiceId, uint256 amountWei, string hospitalXrpl)"
@@ -273,6 +280,100 @@ class BlockchainService {
       return {
         success: false,
         error: error.message
+      };
+    }
+  }
+
+  // Get donor impact data
+  async getDonorImpact(donorAddress) {
+    if (!this.contracts.donationPool) {
+      throw new Error('Contract not initialized');
+    }
+
+    try {
+      const [totalDonated, totalLivesHelped, donationCount] = await this.contracts.donationPool.getDonorImpact(donorAddress);
+      
+      return {
+        totalDonated: parseFloat(ethers.formatEther(totalDonated)),
+        totalLivesHelped: Number(totalLivesHelped),
+        donationCount: Number(donationCount)
+      };
+    } catch (error) {
+      console.error('Error fetching donor impact:', error);
+      return {
+        totalDonated: 0,
+        totalLivesHelped: 0,
+        donationCount: 0
+      };
+    }
+  }
+
+  // Get donor donation history
+  async getDonorHistory(donorAddress) {
+    if (!this.contracts.donationPool) {
+      throw new Error('Contract not initialized');
+    }
+
+    try {
+      const donations = await this.contracts.donationPool.getDonorHistory(donorAddress);
+      
+      return donations.map(donation => ({
+        id: donation.donor + '-' + donation.timestamp,
+        amount: parseFloat(ethers.formatEther(donation.amount)),
+        date: new Date(Number(donation.timestamp) * 1000).toISOString().split('T')[0],
+        method: 'FLR', // Default for native donations
+        livesHelped: Number(donation.livesHelped)
+      }));
+    } catch (error) {
+      console.error('Error fetching donor history:', error);
+      return [];
+    }
+  }
+
+  // Get active emergency requests
+  async getActiveRequests() {
+    if (!this.contracts.donationPool) {
+      throw new Error('Contract not initialized');
+    }
+
+    try {
+      const requests = await this.contracts.donationPool.getActiveRequests();
+      
+      return requests.map((request, index) => ({
+        id: index,
+        hospitalName: request.hospitalXrpl,
+        xrplAddress: request.hospitalXrpl,
+        amountRequested: parseFloat(ethers.formatEther(request.amountWei)),
+        amountFunded: request.funded ? parseFloat(ethers.formatEther(request.amountWei)) : 0,
+        status: request.funded ? 'funded' : 'open',
+        daysOpen: Math.floor((Date.now() - Number(request.timestamp) * 1000) / (1000 * 60 * 60 * 24)),
+        peopleHelped: Number(request.peopleHelped)
+      }));
+    } catch (error) {
+      console.error('Error fetching active requests:', error);
+      return [];
+    }
+  }
+
+  // Calculate equal distribution for a donation
+  async calculateEqualDistribution(donationAmount) {
+    if (!this.contracts.donationPool) {
+      throw new Error('Contract not initialized');
+    }
+
+    try {
+      const amountWei = ethers.parseEther(donationAmount.toString());
+      const [perRequest, totalRequests] = await this.contracts.donationPool.calculateEqualDistribution(amountWei);
+      
+      return {
+        perRequest: parseFloat(ethers.formatEther(perRequest)),
+        totalRequests: Number(totalRequests)
+      };
+    } catch (error) {
+      console.error('Error calculating equal distribution:', error);
+      return {
+        perRequest: 0,
+        totalRequests: 0
       };
     }
   }

@@ -4,180 +4,280 @@ Neo-brutalist React frontend for the FlareHelp cross-chain emergency healthcare 
 
 ## 🎨 Design System
 
-**Neo-Brutalist Aesthetic:**
-- Raw geometry with high contrast
-- Large scale typography (Anton + Inter)
-- Concrete grid system (8px base)
-- Flat slab shadows and visible joins
-- Urgent, confident, human emotional tone
+### Neo-Brutalist Principles
+- **High Contrast**: Bold, accessible color combinations
+- **Geometric Shapes**: Clean, industrial design elements
+- **Typography**: Inter for UI, Anton for display headings
+- **Minimal Gradients**: Flat colors with subtle shadows
+- **Bold Borders**: 2px solid borders for emphasis
 
-## 🚀 Features
+### Color Palette
+```css
+--bg: #F6F7F8        /* Light concrete background */
+--panel: #E6E8EA     /* Card panels */
+--ink: #0B0D0F       /* Near black text */
+--muted: #7B7F84     /* Secondary text */
+--accent: #FF4B3E     /* Emergency red */
+--accent-2: #00B37E   /* Success green */
+--accent-3: #1E90FF   /* Info blue */
+--slab: #2B2F33      /* Deep slab color */
+```
 
-- **Cross-Chain Donations** - Flare native + XRPL integration
-- **Real-time Updates** - Socket.IO for live notifications
-- **Badge System** - NFT rewards with 3D animations
-- **Impact Tracking** - See exactly who you've helped
-- **Hospital Dashboard** - Create and manage emergency requests
-- **Mobile Responsive** - Works on all devices
+## 🚀 Getting Started
 
-## 🛠 Tech Stack
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- MetaMask or compatible wallet
 
-- **React 18** - Modern React with hooks
-- **Framer Motion** - Smooth animations and transitions
-- **Tailwind CSS** - Utility-first styling with custom design tokens
-- **Ethers.js** - Web3 wallet integration
-- **React Query** - Server state management
-- **Socket.IO** - Real-time communication
-
-## 📦 Installation
-
+### Installation
 ```bash
 cd frontend
 npm install
 ```
 
-## 🔧 Environment Setup
-
-Create `.env.local`:
-
-```env
-REACT_APP_API_URL=http://localhost:5000/api
-REACT_APP_SOCKET_URL=http://localhost:5000
-REACT_APP_FLARE_RPC_URL=https://coston2-api.flare.network/ext/C/rpc
-REACT_APP_DONATION_POOL_ADDRESS=0x7845fF302E85389E88c12F24D9cF479A56e3Dab0
-REACT_APP_BADGE_NFT_ADDRESS=0x3C58E50b6A5C74A816B47BA739C914D743E6A78a
-REACT_APP_RECURRING_MANAGER_ADDRESS=0x09Af2320c08537D44efCBFe55ad67C280F63F36E
+### Environment Setup
+```bash
+cp .env.example .env
+# Edit .env with your configuration
 ```
 
-## 🚀 Development
-
+### Development
 ```bash
-# Start development server
 npm start
-
-# Build for production
-npm run build
-
-# Run tests
-npm test
+# Opens http://localhost:3000
 ```
 
-## 🎨 Design Tokens
-
-### Colors
-```css
---bg: #F6F7F8        /* Very light concrete */
---panel: #E6E8EA      /* Card panels */
---ink: #0B0D0F        /* Near black text */
---muted: #7B7F84      /* Secondary text */
---accent: #FF4B3E     /* Emergency/primary CTA */
---accent-2: #00B37E   /* Success/impact */
---accent-3: #1E90FF   /* Info/links */
---slab: #2B2F33       /* Deep slab color */
-```
-
-### Typography
-- **Display**: Anton (headings, CTAs)
-- **UI**: Inter (body text, interface)
-
-### Spacing
-- Base grid: 8px
-- Container max-widths: 980px (tablet), 1320px (desktop)
-
-## 🧩 Component System
-
-### Core Components
-- **SlabButton** - Primary CTA with hover animations
-- **EmergencyRequestCard** - Request display with progress
-- **BadgeComponent** - 3D badge with confetti animations
-- **Navbar** - Global navigation with wallet integration
-- **Toast** - Notification system
-
-### Page Components
-- **HomePage** - Hero, live feed, how it works
-- **HospitalDashboard** - Request management
-- **RequestsPage** - Browse and filter requests
-- **ImpactPage** - Personal impact tracking
-- **ProfilePage** - User settings
-
-## 🎭 Animations
-
-### Motion Principles
-- Mechanical & crisp (not soft/organic)
-- Fast: 120-180ms, Medium: 220-320ms, Slow: 420-600ms
-- Easing: `cubic-bezier(0.2,0.9,0.25,1)`
-
-### Key Animations
-- **Button hover**: `translateY(-2px)` + brightness
-- **Card focus**: Scale pulse for urgent requests
-- **Progress fill**: Width animation with overshoot
-- **Badge mint**: 3D pop with confetti
-- **Page transitions**: Slide with opacity
-
-## 🔗 API Integration
-
-### Authentication
-- Wallet connection via MetaMask
-- JWT token management
-- Role-based access control
-
-### Real-time Features
-- Live donation updates
-- New request notifications
-- Pool statistics ticker
-- Badge award animations
-
-## 📱 Responsive Design
-
-- **Mobile**: 100% width, 16px padding
-- **Tablet**: Max 980px, 24px gutter
-- **Desktop**: Max 1320px, 12-column grid
-
-## ♿ Accessibility
-
-- WCAG AA compliance
-- Keyboard navigation
-- Screen reader support
-- High contrast ratios
-- Reduced motion support
-
-## 🚀 Deployment
-
+### Build
 ```bash
-# Build for production
 npm run build
+# Creates optimized build in build/
+```
 
-# Deploy to your preferred platform
-# (Vercel, Netlify, AWS, etc.)
+## 📁 Project Structure
+
+```
+src/
+├── components/
+│   ├── ui/                 # Reusable UI components
+│   │   ├── SlabButton.jsx  # Primary button component
+│   │   ├── DonationModal.jsx # Donation interface
+│   │   ├── ImpactTracker.jsx # Impact display
+│   │   └── ...
+│   └── layout/
+│       └── Navbar.jsx      # Navigation component
+├── pages/
+│   ├── HomePage.jsx        # Main landing page
+│   ├── ImpactPage.jsx      # Detailed impact view
+│   ├── HospitalDashboard.jsx # Hospital interface
+│   └── ...
+├── services/
+│   └── blockchainService.js # Web3 integration
+├── hooks/
+│   ├── useAuth.js          # Authentication hook
+│   └── useWeb3.js          # Web3 connection hook
+├── styles/
+│   ├── globals.css         # Global styles
+│   └── animations.css      # Custom animations
+└── utils/
+    └── helpers.js          # Utility functions
 ```
 
 ## 🎯 Key Features
 
-### For Donors
-- One-click $5 donations
-- Recurring subscription setup
-- Real-time impact tracking
-- Badge progression system
-- Cross-chain payment options
+### Impact Tracking
+- Real-time donation impact display
+- Equal distribution calculator
+- Donor history and statistics
+- Badge achievement system
 
-### For Hospitals
-- Emergency request creation
-- Document upload and verification
-- Funding status tracking
-- Donor impact visibility
-- Automated disbursement
+### Multi-Currency Support
+- Native FLR donations
+- USDC/USDT ERC-20 tokens
+- XRPL cross-chain donations
+- Credit card integration
 
-### For Everyone
-- Transparent funding process
-- Real-time updates
-- Mobile-first design
-- Global accessibility
-- Emergency response focus
+### Responsive Design
+- Mobile-first approach
+- Tablet and desktop optimized
+- Touch-friendly interactions
+- Accessible navigation
 
-## 🔧 Customization
+## 🧩 Components
 
-The design system is fully customizable through CSS variables and Tailwind config. Modify colors, typography, spacing, and animations to match your brand while maintaining the neo-brutalist aesthetic.
+### SlabButton
+Primary button component with neo-brutalist styling.
 
----
+```jsx
+<SlabButton
+  variant="primary"
+  size="lg"
+  icon={<HeartIcon />}
+  label="Donate to Pool"
+  onClick={handleDonate}
+/>
+```
 
-**Built with ❤️ for emergency healthcare funding**
+### DonationModal
+Comprehensive donation interface supporting multiple payment methods.
+
+```jsx
+<DonationModal
+  isOpen={showModal}
+  onClose={() => setShowModal(false)}
+  onDonate={handleDonation}
+/>
+```
+
+### ImpactTracker
+Displays donor impact with real-time data from blockchain.
+
+```jsx
+<ImpactTracker
+  user={user}
+  donations={donations}
+  emergencyRequests={requests}
+/>
+```
+
+## 🎨 Styling
+
+### Tailwind Configuration
+Custom Tailwind config with neo-brutalist design tokens.
+
+```javascript
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        bg: '#F6F7F8',
+        panel: '#E6E8EA',
+        ink: '#0B0D0F',
+        accent: '#FF4B3E',
+        // ... more colors
+      },
+      fontFamily: {
+        display: ['Anton', 'system-ui', 'sans-serif'],
+        ui: ['Inter', 'system-ui', 'sans-serif'],
+      }
+    }
+  }
+}
+```
+
+### Custom CSS Classes
+```css
+.slab-container {
+  @apply bg-panel border-2 border-solid border-[rgba(11,13,15,0.06)] p-6 rounded-lg;
+}
+
+.btn-slab {
+  @apply inline-flex items-center justify-center font-semibold uppercase tracking-tight;
+  padding: 0.875rem 1.25rem;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgba(11,13,15,0.12);
+}
+```
+
+## 🔗 Blockchain Integration
+
+### Web3 Connection
+```javascript
+import { useWeb3 } from './hooks/useWeb3';
+
+const { connect, disconnect, account, provider } = useWeb3();
+```
+
+### Contract Interaction
+```javascript
+import blockchainService from './services/blockchainService';
+
+// Initialize service
+await blockchainService.initialize(provider, signer);
+
+// Make donation
+const result = await blockchainService.makeDonation(amount);
+```
+
+## 📱 Responsive Breakpoints
+
+- **Mobile**: < 768px
+- **Tablet**: 768px - 1024px
+- **Desktop**: > 1024px
+
+## ♿ Accessibility
+
+- WCAG AA compliant
+- Keyboard navigation support
+- Screen reader friendly
+- High contrast mode support
+- Focus indicators
+
+## 🧪 Testing
+
+```bash
+# Run tests
+npm test
+
+# Run with coverage
+npm run test:coverage
+
+# Run specific test
+npm test -- --testNamePattern="DonationModal"
+```
+
+## 🚀 Deployment
+
+### Build for Production
+```bash
+npm run build
+```
+
+### Environment Variables
+```env
+REACT_APP_API_BASE_URL=https://api.flarehelp.org
+REACT_APP_FLARE_RPC_URL=https://coston2-api.flare.network/ext/bc/C/rpc
+REACT_APP_CONTRACT_ADDRESSES={"donationPool":"0x..."}
+```
+
+### Deploy to Vercel
+```bash
+npm install -g vercel
+vercel --prod
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Wallet Connection Failed**
+- Ensure MetaMask is installed
+- Check network configuration
+- Verify RPC URL
+
+**Contract Interaction Errors**
+- Check contract addresses
+- Verify network connection
+- Ensure sufficient gas
+
+**Build Errors**
+- Clear node_modules and reinstall
+- Check Node.js version
+- Verify environment variables
+
+## 📚 Resources
+
+- [React Documentation](https://reactjs.org/docs)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Ethers.js](https://docs.ethers.org/)
+- [Flare Network](https://flare.network/)
+
+## 🤝 Contributing
+
+See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines.
+
+## 📄 License
+
+MIT License - see [LICENSE](../LICENSE) for details.
