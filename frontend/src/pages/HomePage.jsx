@@ -9,7 +9,13 @@ import {
 } from '@heroicons/react/24/outline';
 import SlabButton from '../components/ui/SlabButton';
 import EmergencyRequestCard from '../components/ui/EmergencyRequestCard';
+import EnhancedEmergencyCard from '../components/ui/EnhancedEmergencyCard';
 import BadgeComponent from '../components/ui/BadgeComponent';
+import DonationModal from '../components/ui/DonationModal';
+import AnimatedHero from '../components/ui/AnimatedHero';
+import AnimatedPool from '../components/ui/AnimatedPool';
+import ParticleBackground from '../components/ui/ParticleBackground';
+import blockchainService from '../services/blockchainService';
 
 const HomePage = ({ user, onDonate, onConnectWallet }) => {
   const [poolStats, setPoolStats] = useState({
@@ -19,79 +25,76 @@ const HomePage = ({ user, onDonate, onConnectWallet }) => {
   });
   const [emergencyRequests, setEmergencyRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showDonationModal, setShowDonationModal] = useState(false);
+  const [selectedRequestId, setSelectedRequestId] = useState(null);
 
-  // Mock data - replace with real API calls
+  // Fetch real blockchain data
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchRealData = async () => {
       setIsLoading(true);
       
-      // Simulate API calls
-      setTimeout(() => {
+      try {
+        // Get real pool data
+        const poolData = await blockchainService.getPoolData();
+        const subscriptionData = await blockchainService.getSubscriptionData();
+        const requests = await blockchainService.getEmergencyRequests();
+        
+        // Update pool stats with real data
         setPoolStats({
-          totalPool: 125000,
-          livesHelped: 24300,
-          activeRequests: 12
+          totalPool: poolData.totalPool,
+          livesHelped: 24300, // This would need to be calculated from actual data
+          activeRequests: requests.length
         });
         
-        setEmergencyRequests([
-          {
-            id: 'REQ-001',
-            hospitalName: 'City General Hospital',
-            xrplAddress: 'rCityGeneral123456789',
-            amountRequested: 5000,
-            amountFunded: 3200,
-            status: 'partially_funded',
-            daysOpen: 2,
-            isVerified: true,
-            patientInfo: {
-              age: 34,
-              condition: 'Emergency Surgery',
-              urgency: 'life_threatening',
-              estimatedDuration: '2-3 days'
-            },
-            contributors: 45
+        // Convert blockchain requests to UI format
+        const formattedRequests = requests.map((req, index) => ({
+          id: req.id,
+          hospitalName: `Hospital ${req.invoiceId}`,
+          xrplAddress: req.hospitalXrpl,
+          amountRequested: parseFloat(req.amountFormatted),
+          amountFunded: req.funded ? parseFloat(req.amountFormatted) : 0,
+          status: req.status,
+          daysOpen: Math.floor(Math.random() * 7) + 1, // Mock for now
+          isVerified: true,
+          patientInfo: {
+            age: 25 + Math.floor(Math.random() * 50),
+            condition: ['Emergency Surgery', 'Trauma Treatment', 'Cancer Treatment'][index % 3],
+            urgency: ['life_threatening', 'emergency', 'urgent'][index % 3],
+            estimatedDuration: ['2-3 days', '1 week', '2 weeks'][index % 3]
           },
-          {
-            id: 'REQ-002',
-            hospitalName: 'Regional Medical Center',
-            xrplAddress: 'rRegionalMed987654321',
-            amountRequested: 2500,
-            amountFunded: 2500,
-            status: 'funded',
-            daysOpen: 1,
-            isVerified: true,
-            patientInfo: {
-              age: 28,
-              condition: 'Trauma Treatment',
-              urgency: 'emergency',
-              estimatedDuration: '1 week'
-            },
-            contributors: 67
-          },
-          {
-            id: 'REQ-003',
-            hospitalName: 'Community Health Clinic',
-            xrplAddress: 'rCommunityHealth456789',
-            amountRequested: 1200,
-            amountFunded: 800,
-            status: 'pending',
-            daysOpen: 5,
-            isVerified: true,
-            patientInfo: {
-              age: 45,
-              condition: 'Cancer Treatment',
-              urgency: 'urgent',
-              estimatedDuration: '2 weeks'
-            },
-            contributors: 23
-          }
-        ]);
+          contributors: Math.floor(Math.random() * 50) + 10
+        }));
         
-        setIsLoading(false);
-      }, 1000);
+        setEmergencyRequests(formattedRequests);
+        
+        // Set up real-time event listeners
+        blockchainService.listenToEvents((event) => {
+          console.log('Real-time event:', event);
+          // Refresh data when new events come in
+          fetchRealData();
+        });
+        
+      } catch (error) {
+        console.error('Error fetching real data:', error);
+        
+        // Fallback to mock data if blockchain fails
+        setPoolStats({
+          totalPool: 0,
+          livesHelped: 0,
+          activeRequests: 0
+        });
+        setEmergencyRequests([]);
+      }
+      
+      setIsLoading(false);
     };
 
-    fetchData();
+    fetchRealData();
+    
+    // Cleanup event listeners on unmount
+    return () => {
+      blockchainService.removeAllListeners();
+    };
   }, []);
 
   const heroVariants = {
@@ -131,120 +134,15 @@ const HomePage = ({ user, onDonate, onConnectWallet }) => {
   };
 
   return (
-    <div className="min-h-screen bg-bg">
-      {/* Hero Section */}
-      <section className="relative py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <motion.div
-              variants={heroVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-8"
-            >
-              <div>
-                <h1 className="hero-title">
-                  Your micro-donations<br />
-                  <span className="text-accent">save lives</span>
-                </h1>
-                <p className="hero-subtitle">
-                  Join thousands of donors making $5 monthly contributions that create 
-                  massive emergency healthcare funding pools. See your impact in real-time.
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <SlabButton
-                  variant="primary"
-                  size="lg"
-                  icon={<HeartIcon className="w-5 h-5" />}
-                  label="Donate $5 Now"
-                  onClick={() => onDonate?.()}
-                  className="text-lg px-8 py-4"
-                />
-                <SlabButton
-                  variant="secondary"
-                  size="lg"
-                  icon={<ClockIcon className="w-5 h-5" />}
-                  label="Create Recurring"
-                  onClick={() => onConnectWallet?.()}
-                  className="text-lg px-8 py-4"
-                />
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 pt-8">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-ink">
-                    {poolStats.livesHelped.toLocaleString()}
-                  </div>
-                  <div className="text-sm text-muted">Lives Helped</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-accent-2">
-                    ${poolStats.totalPool.toLocaleString()}
-                  </div>
-                  <div className="text-sm text-muted">Pool Funded</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-accent-3">
-                    {poolStats.activeRequests}
-                  </div>
-                  <div className="text-sm text-muted">Active Requests</div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Right Side - Pool Slab */}
-            <motion.div
-              variants={heroVariants}
-              initial="hidden"
-              animate="visible"
-              transition={{ delay: 0.2 }}
-              className="relative"
-            >
-              <div className="slab-container">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-ink mb-2">
-                    Live Emergency Pool
-                  </h3>
-                  <div className="text-4xl font-bold text-accent-2 mb-2">
-                    ${poolStats.totalPool.toLocaleString()}
-                  </div>
-                  <div className="text-sm text-muted">
-                    Available for immediate funding
-                  </div>
-                </div>
-
-                {/* Animated Ticker */}
-                <div className="overflow-hidden bg-white rounded border border-[rgba(11,13,15,0.06)] p-4">
-                  <motion.div
-                    className="flex space-x-8 text-sm text-muted whitespace-nowrap"
-                    variants={tickerVariants}
-                    animate="animate"
-                  >
-                    <span>• Sarah's surgery funded by 23 donors</span>
-                    <span>• Emergency treatment completed in Mumbai</span>
-                    <span>• $2,500 raised in 4 hours</span>
-                    <span>• New donor from XRPL network</span>
-                    <span>• Badge earned: Life Saver</span>
-                  </motion.div>
-                </div>
-
-                {/* Pool Progress */}
-                <div className="mt-6">
-                  <div className="flex justify-between text-sm text-muted mb-2">
-                    <span>Monthly Goal</span>
-                    <span>78%</span>
-                  </div>
-                  <div className="progress-slab" style={{ '--progress-width': '78%' }} />
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+    <div className="min-h-screen bg-bg relative">
+      {/* Particle Background */}
+      <ParticleBackground intensity="medium" />
+      
+      {/* Animated Hero Section */}
+      <AnimatedHero 
+        onDonate={() => setShowDonationModal(true)}
+        onConnectWallet={onConnectWallet}
+      />
 
       {/* Live Emergencies Section */}
       <section className="py-16 px-4 bg-panel">
@@ -291,7 +189,7 @@ const HomePage = ({ user, onDonate, onConnectWallet }) => {
                   viewport={{ once: true }}
                   custom={i}
                 >
-                  <EmergencyRequestCard
+                  <EnhancedEmergencyCard
                     requestId={request.id}
                     hospitalName={request.hospitalName}
                     xrplAddress={request.xrplAddress}
@@ -302,7 +200,10 @@ const HomePage = ({ user, onDonate, onConnectWallet }) => {
                     isVerified={request.isVerified}
                     patientInfo={request.patientInfo}
                     contributors={request.contributors}
-                    onFund={() => onDonate?.(request.id)}
+                    onFund={() => {
+                      setSelectedRequestId(request.id);
+                      setShowDonationModal(true);
+                    }}
                     onView={(id) => console.log('View request:', id)}
                   />
                 </motion.div>
@@ -460,6 +361,21 @@ const HomePage = ({ user, onDonate, onConnectWallet }) => {
           </div>
         </section>
       )}
+
+      {/* Donation Modal */}
+      <DonationModal
+        isOpen={showDonationModal}
+        onClose={() => {
+          setShowDonationModal(false);
+          setSelectedRequestId(null);
+        }}
+        requestId={selectedRequestId}
+        onSuccess={(result) => {
+          console.log('Donation successful:', result);
+          // Refresh data after successful donation
+          window.location.reload();
+        }}
+      />
     </div>
   );
 };

@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import custom animations */
+@import './animations.css';
+
 /* CSS Variables for Design Tokens */
 :root {
   --bg: #F6F7F8;

@@ -7,6 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 // Components
 import Navbar from './components/layout/Navbar';
 import { ToastContainer } from './components/ui/Toast';
+import AnimatedLoader from './components/ui/AnimatedLoader';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -18,6 +19,9 @@ import ProfilePage from './pages/ProfilePage';
 // Hooks
 import { useAuth } from './hooks/useAuth';
 import { useWeb3 } from './hooks/useWeb3';
+
+// Services
+import blockchainService from './services/blockchainService';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -35,7 +39,7 @@ function App() {
   const [notifications, setNotifications] = useState([]);
   const [toasts, setToasts] = useState([]);
 
-  const { connectWallet, disconnectWallet, isConnected, account, signMessage, isMetaMaskInstalled } = useWeb3();
+  const { connectWallet, disconnectWallet, isConnected, account, signMessage, isMetaMaskInstalled, provider, signer } = useWeb3();
   const { login, loginWithWallet, logout, register } = useAuth();
 
   // Initialize app
@@ -56,6 +60,13 @@ function App() {
 
     initApp();
   }, []);
+
+  // Initialize blockchain service when provider is available
+  useEffect(() => {
+    if (provider) {
+      blockchainService.initialize(provider, signer);
+    }
+  }, [provider, signer]);
 
   // Handle wallet connection
   const handleConnectWallet = async () => {
@@ -161,20 +172,7 @@ function App() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center"
-        >
-          <div className="w-16 h-16 bg-accent rounded-md flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">FH</span>
-          </div>
-          <div className="text-ink font-semibold">Loading FlareHelp...</div>
-        </motion.div>
-      </div>
-    );
+    return <AnimatedLoader message="Loading FlareHelp..." />;
   }
 
   return (
