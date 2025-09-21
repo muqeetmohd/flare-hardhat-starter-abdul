@@ -179,10 +179,7 @@ const Navbar = ({
               size="md"
               icon={<WalletIcon className="w-4 h-4" />}
               label="Connect Wallet"
-              onClick={() => {
-                console.log('Connect wallet button clicked in Navbar');
-                onConnectWallet?.();
-              }}
+              onClick={onConnectWallet}
             />
           )}
 
@@ -249,7 +246,6 @@ const Navbar = ({
                     icon={<WalletIcon className="w-4 h-4" />}
                     label="Connect Wallet"
                     onClick={() => {
-                      console.log('Connect wallet button clicked in mobile menu');
                       onConnectWallet?.();
                       setIsMobileMenuOpen(false);
                     }}

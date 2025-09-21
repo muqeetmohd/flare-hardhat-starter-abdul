@@ -25,49 +25,32 @@ export const useWeb3 = () => {
 
   // Connect wallet
   const connectWallet = useCallback(async () => {
-    console.log('useWeb3: connectWallet called');
-    console.log('useWeb3: MetaMask installed:', isMetaMaskInstalled());
-    
     if (!isMetaMaskInstalled()) {
-      console.log('useWeb3: MetaMask not installed');
       setError('MetaMask is not installed. Please install MetaMask to continue.');
       return null;
     }
 
-    console.log('useWeb3: Setting loading to true');
     setIsLoading(true);
     setError(null);
 
     try {
-      console.log('useWeb3: Getting provider...');
       const provider = getProvider();
-      console.log('useWeb3: Provider:', provider);
-      
       if (!provider) {
         throw new Error('Failed to get provider');
       }
 
       // Request account access
-      console.log('useWeb3: Requesting accounts...');
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
       });
-      console.log('useWeb3: Accounts received:', accounts);
 
       if (accounts.length === 0) {
         throw new Error('No accounts found');
       }
 
       const account = accounts[0];
-      console.log('useWeb3: Using account:', account);
-      
-      console.log('useWeb3: Getting signer...');
       const signer = await provider.getSigner();
-      console.log('useWeb3: Signer:', signer);
-      
-      console.log('useWeb3: Getting network...');
       const network = await provider.getNetwork();
-      console.log('useWeb3: Network:', network);
 
       setAccount(account);
       setProvider(provider);
@@ -75,14 +58,12 @@ export const useWeb3 = () => {
       setChainId(network.chainId.toString());
       setIsConnected(true);
 
-      console.log('useWeb3: Wallet connected successfully');
       return account;
     } catch (err) {
-      console.error('useWeb3: Wallet connection error:', err);
+      console.error('Wallet connection error:', err);
       setError(err.message || 'Failed to connect wallet');
       return null;
     } finally {
-      console.log('useWeb3: Setting loading to false');
       setIsLoading(false);
     }
   }, [getProvider]);
@@ -99,22 +80,16 @@ export const useWeb3 = () => {
 
   // Sign message
   const signMessage = useCallback(async (message) => {
-    console.log('useWeb3: signMessage called with message:', message);
-    console.log('useWeb3: signer available:', !!signer);
-    
     if (!signer) {
-      console.log('useWeb3: No signer available');
       throw new Error('Wallet not connected');
     }
 
     try {
-      console.log('useWeb3: Calling signer.signMessage...');
       const signature = await signer.signMessage(message);
-      console.log('useWeb3: Signature received:', signature);
       return signature;
     } catch (err) {
-      console.error('useWeb3: Message signing error:', err);
-      throw new Error('Failed to sign message: ' + err.message);
+      console.error('Message signing error:', err);
+      throw new Error('Failed to sign message');
     }
   }, [signer]);
 

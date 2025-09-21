@@ -59,38 +59,27 @@ function App() {
 
   // Handle wallet connection
   const handleConnectWallet = async () => {
-    console.log('Connect wallet clicked');
-    console.log('MetaMask installed:', isMetaMaskInstalled);
-    
     if (!isMetaMaskInstalled) {
-      console.log('MetaMask not installed');
       showToast('error', 'MetaMask Required', 'Please install MetaMask to connect your wallet');
       return;
     }
 
     try {
-      console.log('Attempting to connect wallet...');
       const walletAccount = await connectWallet();
-      console.log('Wallet account:', walletAccount);
       
       if (walletAccount) {
         // Create a message to sign
         const message = `Welcome to FlareHelp! Please sign this message to authenticate your wallet.\n\nWallet: ${walletAccount}\nTimestamp: ${Date.now()}`;
-        console.log('Message to sign:', message);
         
         // Sign the message
-        console.log('Requesting signature...');
         const signature = await signMessage(message);
-        console.log('Signature received:', signature);
         
         // Login with wallet signature
-        console.log('Sending to backend...');
         const userData = await loginWithWallet({
           walletAddress: walletAccount,
           signature: signature,
           message: message
         });
-        console.log('User data received:', userData);
         
         if (userData) {
           setUser(userData);
