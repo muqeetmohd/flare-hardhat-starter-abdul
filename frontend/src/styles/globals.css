@@ -1,0 +1,349 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton:wght@400&family=Inter:wght@400;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Variables for Design Tokens */
+:root {
+  --bg: #F6F7F8;
+  --panel: #E6E8EA;
+  --ink: #0B0D0F;
+  --muted: #7B7F84;
+  --accent: #FF4B3E;
+  --accent-2: #00B37E;
+  --accent-3: #1E90FF;
+  --slab: #2B2F33;
+  --glass: rgba(11,13,15,0.04);
+  
+  --font-display: 'Anton', system-ui, sans-serif;
+  --font-ui: 'Inter', system-ui, sans-serif;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-ui);
+  background-color: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Neo-Brutalist Button System */
+.btn-slab {
+  @apply inline-flex items-center justify-center font-semibold uppercase tracking-tight;
+  padding: 0.875rem 1.25rem;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgba(11,13,15,0.12);
+  background-color: var(--accent);
+  color: white;
+  box-shadow: none;
+  transform: translateY(0);
+  transition: transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.btn-slab:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+  box-shadow: 0 4px 0 0 rgba(11,13,15,0.12);
+}
+
+.btn-slab:active {
+  transform: translateY(0);
+  filter: brightness(0.95);
+}
+
+.btn-slab:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  transform: none;
+}
+
+.btn-slab.btn-secondary {
+  background-color: var(--slab);
+}
+
+.btn-slab.btn-ghost {
+  background-color: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.btn-slab.btn-ghost:hover {
+  background-color: var(--ink);
+  color: white;
+}
+
+/* Card System */
+.card-req {
+  @apply bg-panel border-2 border-solid border-[rgba(11,13,15,0.06)] p-4 rounded-md;
+  display: flex;
+  gap: 16px;
+  position: relative;
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+}
+
+.card-req:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 0 rgba(11,13,15,0.12);
+}
+
+.card-strip {
+  width: 8px;
+  border-radius: 4px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.card-strip.funded {
+  background: var(--accent-2);
+}
+
+.card-strip.pending {
+  background: var(--muted);
+}
+
+/* Progress Slab */
+.progress-slab {
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent-2) var(--progress-width, 0%), rgba(0,0,0,0.06) var(--progress-width, 0%));
+  border: 1px solid rgba(11,13,15,0.06);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-slab::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: var(--progress-width, 0%);
+  background: linear-gradient(90deg, var(--accent-2), var(--accent-2));
+  transition: width 900ms linear;
+}
+
+/* Hero Typography */
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 3.5rem;
+  line-height: 1;
+  color: var(--ink);
+  text-transform: uppercase;
+  margin: 0 0 1rem 0;
+}
+
+.hero-subtitle {
+  font-family: var(--font-ui);
+  font-size: 1.125rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+/* Slab Container */
+.slab-container {
+  background: var(--panel);
+  border: 2px solid rgba(11,13,15,0.06);
+  border-radius: 8px;
+  padding: 2rem;
+  position: relative;
+}
+
+.slab-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 8px 8px 0 0;
+}
+
+/* Badge Component */
+.badge-slab {
+  @apply bg-panel border-2 border-solid border-[rgba(11,13,15,0.12)] rounded-md;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.22s cubic-bezier(0.2,0.9,0.25,1);
+  cursor: pointer;
+}
+
+.badge-slab:hover {
+  transform: rotateX(20deg);
+}
+
+.badge-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.badge-level {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Navbar */
+.navbar {
+  height: 72px;
+  background: var(--panel);
+  border-bottom: 2px solid rgba(11,13,15,0.06);
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.navbar-mobile {
+  height: 56px;
+  padding: 0 1rem;
+}
+
+/* Toast Notifications */
+.toast-slab {
+  @apply bg-panel border-2 border-solid border-[rgba(11,13,15,0.12)] rounded-md p-4;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+  min-width: 300px;
+  box-shadow: 0 4px 0 0 rgba(11,13,15,0.12);
+  animation: slide-in 220ms cubic-bezier(0.2,0.9,0.25,1);
+}
+
+.toast-slab.toast-exit {
+  animation: slide-out 160ms cubic-bezier(0.2,0.9,0.25,1);
+}
+
+.toast-strip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--accent);
+  border-radius: 4px 0 0 4px;
+}
+
+/* Modal */
+.modal-backdrop {
+  background: var(--glass);
+  backdrop-filter: none; /* Keep brutalist rawness */
+}
+
+.modal-content {
+  @apply bg-panel border-2 border-solid border-[rgba(11,13,15,0.12)] rounded-md;
+  max-width: 800px;
+  margin: 2rem auto;
+  box-shadow: 0 8px 0 0 rgba(11,13,15,0.12);
+}
+
+/* Form Elements */
+.form-input {
+  @apply w-full px-4 py-3 border-2 border-solid border-[rgba(11,13,15,0.06)] rounded-md;
+  background: white;
+  font-family: var(--font-ui);
+  transition: border-color 0.14s ease, box-shadow 0.14s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(255,75,62,0.1);
+}
+
+/* Urgent Pulse Animation */
+@keyframes urgent-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.urgent-pulse {
+  animation: urgent-pulse 2s ease-in-out infinite;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus styles for accessibility */
+.focus-visible:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--accent);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Loading states */
+.loading-skeleton {
+  background: linear-gradient(90deg, var(--panel) 25%, rgba(255,255,255,0.5) 50%, var(--panel) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Confetti for badge minting */
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  animation: confetti-fall 1s ease-out forwards;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100px) rotate(360deg);
+    opacity: 0;
+  }
+}
