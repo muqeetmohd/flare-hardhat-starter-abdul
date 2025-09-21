@@ -9,7 +9,7 @@ import {IFtsoFeedIdConverter} from "@flarenetwork/flare-periphery-contracts/cost
 contract SimpleFtsoExample {
     /**
      * @dev Get the current price and decimals of an asset from FTSO system
-     */
+     */ 
     function getCurrentTokenPriceWithDecimals(
         string memory feedName
     ) public view returns (uint256 _price, int8 _decimals) {

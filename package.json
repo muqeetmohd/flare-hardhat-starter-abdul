@@ -37,6 +37,7 @@
     "@nomicfoundation/hardhat-verify": "^2.0.0",
     "@nomiclabs/hardhat-truffle5": "^2.0.7",
     "@nomiclabs/hardhat-web3": "^2.0.1",
+    "@openzeppelin/contracts": "^5.4.0",
     "@tenderly/hardhat-tenderly": "^2.5.2",
     "@typechain/ethers-v6": "^0.5.0",
     "@typechain/hardhat": "^9.0.0",
@@ -45,11 +46,12 @@
     "@types/mocha": ">=9.1.0",
     "@types/node": ">=18.0.0",
     "chai": "^4.2.0",
-    "dotenv": "^16.4.7",
-    "eslint": "^9.17.0",
+    "dotenv": "^16.6.1",
+    "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "hardhat": "^2.26.3",
     "hardhat-gas-reporter": "^1.0.8",
     "prettier": "^3.0.0",
     "prettier-plugin-solidity": "^1.4.2",
@@ -62,12 +64,13 @@
   "dependencies": {
     "@flarenetwork/flare-periphery-contract-artifacts": "0.1.35",
     "@flarenetwork/flare-periphery-contracts": "0.1.35",
-    "@openzeppelin/contracts": "^5.2.0",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "@typescript-eslint/parser": "^7.3.1",
-    "ethers": "^6.4.0",
-    "hardhat": "^2.22.18",
-    "solhint": "^4.5.2"
+    "body-parser": "^1.20.3",
+    "ethers": "^6.15.0",
+    "express": "^4.21.2",
+    "solhint": "^4.5.2",
+    "xrpl": "^2.14.3"
   },
   "packageManager": "yarn@1.22.22"
 }
